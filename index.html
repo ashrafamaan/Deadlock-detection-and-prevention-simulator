@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deadlock Prevention & Recovery Toolkit</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- HERO SECTION -->
+<header class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">OS SYSTEMS TOOLKIT v2.0</div>
+    <h1>DEADLOCK<br><span class="accent">PREVENTION</span><br>& RECOVERY</h1>
+    <p class="hero-sub">Real-time detection · Banker's Algorithm · RAG Visualization · Interactive Simulation</p>
+    <div class="hero-nav">
+      <button class="nav-pill active" onclick="showSection('banker')">⬡ Banker's Algorithm</button>
+      <button class="nav-pill" onclick="showSection('rag')">⬡ RAG Visualizer</button>
+      <button class="nav-pill" onclick="showSection('simulator')">⬡ Deadlock Simulator</button>
+      <button class="nav-pill" onclick="showSection('recovery')">⬡ Recovery Strategies</button>
+    </div>
+  </div>
+  <div class="scan-line"></div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- ===== SECTION 1: BANKER'S ALGORITHM ===== -->
+  <section id="banker" class="toolkit-section active">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <div>
+        <h2>Banker's Algorithm</h2>
+        <p>Safety state detection using resource allocation matrices</p>
+      </div>
+      <div class="status-led" id="bankerStatus">IDLE</div>
+    </div>
+
+    <div class="config-bar">
+      <label>Processes: <input type="number" id="numProcesses" value="4" min="1" max="8" onchange="initBanker()"></label>
+      <label>Resources: <input type="number" id="numResources" value="3" min="1" max="5" onchange="initBanker()"></label>
+      <button class="btn-primary" onclick="initBanker()">⟳ Reinitialize</button>
+      <button class="btn-ghost" onclick="loadBankerPreset()">Load Sample</button>
+    </div>
+
+    <div class="matrices-grid">
+      <div class="matrix-panel">
+        <h3>Available Resources</h3>
+        <div id="availableContainer"></div>
+      </div>
+      <div class="matrix-panel">
+        <h3>Max Demand</h3>
+        <div id="maxContainer" class="scrollable-matrix"></div>
+      </div>
+      <div class="matrix-panel">
+        <h3>Allocation</h3>
+        <div id="allocationContainer" class="scrollable-matrix"></div>
+      </div>
+      <div class="matrix-panel computed">
+        <h3>Need Matrix <span class="tag">Auto-computed</span></h3>
+        <div id="needContainer" class="scrollable-matrix"></div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-run" onclick="runBankerAlgorithm()">▶ RUN SAFETY CHECK</button>
+    </div>
+
+    <div id="bankerOutput" class="output-panel hidden">
+      <div class="output-header">
+        <span id="bankerResult" class="result-badge"></span>
+        <span id="safeSequence" class="safe-seq"></span>
+      </div>
+      <div id="bankerSteps" class="steps-log"></div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 2: RAG VISUALIZER ===== -->
+  <section id="rag" class="toolkit-section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <div>
+        <h2>Resource Allocation Graph</h2>
+        <p>Live visualization with cycle detection</p>
+      </div>
+      <div class="status-led" id="ragStatus">IDLE</div>
+    </div>
+
+    <div class="rag-workspace">
+      <div class="rag-controls">
+        <h3>Graph Builder</h3>
+
+        <div class="control-group">
+          <label>Processes (P)</label>
+          <input type="number" id="ragProcesses" value="3" min="1" max="6">
+        </div>
+        <div class="control-group">
+          <label>Resources (R)</label>
+          <input type="number" id="ragResources" value="3" min="1" max="6">
+        </div>
+        <button class="btn-primary full-width" onclick="initRAG()">Initialize Graph</button>
+
+        <div class="divider"></div>
+
+        <h3>Add Edge</h3>
+        <div class="control-group">
+          <label>Type</label>
+          <select id="edgeType">
+            <option value="request">Request (P → R)</option>
+            <option value="assignment">Assignment (R → P)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Process</label>
+          <select id="edgeProcess"></select>
+        </div>
+        <div class="control-group">
+          <label>Resource</label>
+          <select id="edgeResource"></select>
+        </div>
+        <button class="btn-primary full-width" onclick="addRAGEdge()">+ Add Edge</button>
+        <button class="btn-danger full-width" onclick="removeRAGEdge()">− Remove Edge</button>
+
+        <div class="divider"></div>
+        <button class="btn-run full-width" onclick="detectCycle()">⚡ Detect Cycle</button>
+        <button class="btn-ghost full-width" onclick="clearRAG()">Clear Graph</button>
+        <button class="btn-ghost full-width" onclick="loadRAGPreset()">Load Preset</button>
+      </div>
+
+      <div class="rag-canvas-wrap">
+        <canvas id="ragCanvas"></canvas>
+        <div id="ragLegend" class="rag-legend">
+          <span class="leg-item"><span class="leg-dot process"></span>Process</span>
+          <span class="leg-item"><span class="leg-dot resource"></span>Resource</span>
+          <span class="leg-item"><span class="leg-arrow req"></span>Request</span>
+          <span class="leg-item"><span class="leg-arrow asgn"></span>Assignment</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="ragOutput" class="output-panel hidden"></div>
+  </section>
+
+  <!-- ===== SECTION 3: DEADLOCK SIMULATOR ===== -->
+  <section id="simulator" class="toolkit-section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <div>
+        <h2>Deadlock Simulator</h2>
+        <p>Build custom scenarios or use presets</p>
+      </div>
+      <div class="status-led" id="simStatus">IDLE</div>
+    </div>
+
+    <div class="preset-strip">
+      <span class="preset-label">PRESETS:</span>
+      <button class="preset-btn" onclick="loadPreset('circular')">Circular Wait</button>
+      <button class="preset-btn" onclick="loadPreset('dining')">Dining Philosophers</button>
+      <button class="preset-btn" onclick="loadPreset('producer')">Producer-Consumer</button>
+      <button class="preset-btn" onclick="loadPreset('twoprocess')">Two-Process</button>
+      <button class="preset-btn" onclick="loadPreset('custom')">Custom</button>
+    </div>
+
+    <div class="sim-workspace">
+      <div class="sim-controls">
+        <h3>Simulation Setup</h3>
+        <div class="control-group">
+          <label>Processes</label>
+          <input type="number" id="simProcesses" value="3" min="2" max="6">
+        </div>
+        <div class="control-group">
+          <label>Resources</label>
+          <input type="number" id="simResources" value="2" min="1" max="4">
+        </div>
+        <button class="btn-primary full-width" onclick="initSimulator()">Init Simulator</button>
+
+        <div class="divider"></div>
+
+        <h3>Step Control</h3>
+        <div class="control-group">
+          <label>Process</label>
+          <select id="simProcess"></select>
+        </div>
+        <div class="control-group">
+          <label>Action</label>
+          <select id="simAction">
+            <option value="request">Request Resource</option>
+            <option value="release">Release Resource</option>
+            <option value="acquire">Acquire Resource</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Resource</label>
+          <select id="simResource"></select>
+        </div>
+        <button class="btn-primary full-width" onclick="addSimStep()">+ Add Step</button>
+
+        <div class="divider"></div>
+
+        <div class="speed-control">
+          <label>Speed: <span id="speedLabel">1x</span></label>
+          <input type="range" id="simSpeed" min="1" max="5" value="2" oninput="updateSpeed(this.value)">
+        </div>
+
+        <button class="btn-run full-width" onclick="runSimulation()">▶ RUN SIMULATION</button>
+        <button class="btn-ghost full-width" onclick="stepSimulation()">⏭ STEP</button>
+        <button class="btn-danger full-width" onclick="resetSimulation()">⏹ RESET</button>
+      </div>
+
+      <div class="sim-main">
+        <div class="sim-visual">
+          <canvas id="simCanvas"></canvas>
+        </div>
+        <div class="sim-steps-panel">
+          <h3>Event Log</h3>
+          <div id="simEventLog" class="event-log"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="simOutput" class="output-panel hidden"></div>
+  </section>
+
+  <!-- ===== SECTION 4: RECOVERY STRATEGIES ===== -->
+  <section id="recovery" class="toolkit-section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <div>
+        <h2>Recovery Strategies</h2>
+        <p>Resolve detected deadlocks using multiple strategies</p>
+      </div>
+      <div class="status-led" id="recoveryStatus">IDLE</div>
+    </div>
+
+    <div class="recovery-scenario">
+      <h3>Deadlock Scenario</h3>
+      <div class="scenario-builder">
+        <div class="control-group">
+          <label>Processes in Deadlock</label>
+          <input type="number" id="recProcesses" value="3" min="2" max="6">
+        </div>
+        <div class="control-group">
+          <label>Resources Held</label>
+          <input type="number" id="recResources" value="3" min="1" max="5">
+        </div>
+        <button class="btn-primary" onclick="setupRecovery()">Setup Scenario</button>
+        <button class="btn-ghost" onclick="loadRecoveryPreset()">Load Preset</button>
+      </div>
+      <div id="recoveryScenarioDisplay" class="scenario-display"></div>
+    </div>
+
+    <div class="strategies-grid">
+      <div class="strategy-card" id="strat-terminate">
+        <div class="strat-icon">⚠</div>
+        <h3>Process Termination</h3>
+        <p>Abort deadlocked processes one by one until deadlock is resolved. Selects by priority and cost.</p>
+        <div class="strat-config">
+          <label><input type="radio" name="termMode" value="one" checked> Terminate One</label>
+          <label><input type="radio" name="termMode" value="all"> Terminate All</label>
+        </div>
+        <button class="btn-strat" onclick="applyRecovery('terminate')">Apply Strategy</button>
+      </div>
+
+      <div class="strategy-card" id="strat-preempt">
+        <div class="strat-icon">⟳</div>
+        <h3>Resource Preemption</h3>
+        <p>Forcibly reclaim resources from victim processes. Selects victim with minimum cost.</p>
+        <div class="strat-config">
+          <label>Victim Selection:</label>
+          <select id="victimMode">
+            <option value="min-cost">Min Cost</option>
+            <option value="youngest">Youngest Process</option>
+            <option value="fewest-res">Fewest Resources</option>
+          </select>
+        </div>
+        <button class="btn-strat" onclick="applyRecovery('preempt')">Apply Strategy</button>
+      </div>
+
+      <div class="strategy-card" id="strat-rollback">
+        <div class="strat-icon">↩</div>
+        <h3>Checkpoint Rollback</h3>
+        <p>Roll back processes to saved checkpoints, releasing held resources automatically.</p>
+        <div class="strat-config">
+          <label>Rollback Depth: <input type="number" id="rollbackDepth" value="1" min="1" max="5" style="width:50px"></label>
+        </div>
+        <button class="btn-strat" onclick="applyRecovery('rollback')">Apply Strategy</button>
+      </div>
+
+      <div class="strategy-card" id="strat-auto">
+        <div class="strat-icon">🤖</div>
+        <h3>Auto Recovery</h3>
+        <p>Intelligent strategy selector: analyzes scenario and picks optimal recovery path.</p>
+        <div class="strat-config">
+          <label><input type="checkbox" id="autoOptimize" checked> Optimize for throughput</label>
+        </div>
+        <button class="btn-strat highlight" onclick="applyRecovery('auto')">▶ Auto Recover</button>
+      </div>
+    </div>
+
+    <div id="recoveryOutput" class="output-panel hidden"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>Deadlock Prevention & Recovery Toolkit · Built for OS Concepts · Banker's Algorithm · RAG · Simulation</p>
+</footer>
+
+<script src="js/banker.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/simulator.js"></script>
+<script src="js/recovery.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
