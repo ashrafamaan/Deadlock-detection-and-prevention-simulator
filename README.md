@@ -2,16 +2,16 @@
 
 > A real-time web toolkit for detecting, preventing, and recovering from deadlocks in operating systems.
 
-[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Site-00d4ff?style=for-the-badge)](https://ashrafamaan.github.io/Deadlock-detection-and-prevention-simulator/)
-[![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)](https://ashrafamaan.github.io/Deadlock-detection-and-prevention-simulator/)
-[![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)](https://ashrafamaan.github.io/Deadlock-detection-and-prevention-simulator/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://ashrafamaan.github.io/Deadlock-detection-and-prevention-simulator/)
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Site-00d4ff?style=for-the-badge)](https://deadlock-prevention.netlify.app/)
+[![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)](https://deadlock-prevention.netlify.app/)
+[![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)](https://deadlock-prevention.netlify.app/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://deadlock-prevention.netlify.app/)
 
 ---
 
 ## 🌐 Live Demo
 
-**[https://ashrafamaan.github.io/Deadlock-detection-and-prevention-simulator/](https://ashrafamaan.github.io/Deadlock-detection-and-prevention-simulator/)**
+**[https://deadlock-prevention.netlify.app/](https://deadlock-prevention.netlify.app/)**
 
 ---
 
