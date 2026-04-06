@@ -780,3 +780,62 @@ button { cursor: pointer; font-family: var(--font-body); font-weight: 600; trans
   .rag-workspace { grid-template-columns: 1fr; }
   .sim-workspace { grid-template-columns: 1fr; }
 }
+
+/* ── IMPORT BAR (cross-tab data transfer) ── */
+.import-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-left: 3px solid rgba(0, 212, 255, 0.4);
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.import-bar-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.btn-import {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  padding: 6px 14px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  color: var(--accent);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-import:hover {
+  background: rgba(0, 212, 255, 0.14);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-import:active {
+  transform: translateY(0);
+}
+
+/* ── TOAST ── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(12px); }
+}
